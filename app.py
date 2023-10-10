@@ -12,17 +12,17 @@ if uploaded_file is not None:
     width, height = image.size
 
     # Define cropping boundaries
-    left = int(width * 0.15)
-    right = int(width * 0.85)
-    top = int(height * 0.2)
-    bottom = int(height * 0.8)
+    left = int(width * 0.05)
+    right = int(width * 0.95)
+    top = int(height * 0.1)
+    bottom = int(height * 0.9)
 
-    # Crop the image
+    # Crop the imagestre
     image = image.crop((left, top, right, bottom))
 
     # Resize the cropped image
     image = image.resize((224, 224))
-
+    print(image)
     # Convert the PIL image to a numpy array
     image_array = np.array(image)
 
