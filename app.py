@@ -19,12 +19,12 @@ if uploaded_file is not None:
 
     # Crop the imagestre
     image = image.crop((left, top, right, bottom))
-
+    
     # Resize the cropped image
     image = image.resize((224, 224))
-    print(image)
     # Convert the PIL image to a numpy array
     image_array = np.array(image)
+    st.write(image_array.shape)
 
     # Predict using the model
     out = model.predict(image_array.reshape(-1, 224, 224, 3))
