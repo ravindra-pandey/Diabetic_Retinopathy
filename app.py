@@ -14,8 +14,8 @@ if uploaded_file is not None:
     # Define cropping boundaries
     left = int(width * 0.05)
     right = int(width * 0.95)
-    top = int(height * 0.1)
-    bottom = int(height * 0.9)
+    top = int(height * 0.08)
+    bottom = int(height * 0.92)
 
     # Crop the imagestre
     image = image.crop((left, top, right, bottom))
