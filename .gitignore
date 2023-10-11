@@ -1,4 +1,8 @@
 *.jpg
 *.jpeg
+*.png
 *.zip
 .vscode
+dataset
+augmented_dataset
+runtimes
