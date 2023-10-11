@@ -2,9 +2,15 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import pickle
+
+st.set_page_config(page_icon="hello",layout="wide")
 
 uploaded_file = st.file_uploader("Choose a file", type=["jpg", "jpeg", "png"])
-model = tf.keras.models.load_model("model.h5")
+model = tf.keras.models.load_model("models/binary_model.h5")
+augmentor=pickle.load(open("serialized_files/augmentor.pkl","rb"))
+
+level=st.slider(label="depth of prediction",min_value=1, max_value=15)
 
 if uploaded_file is not None:
     st.write("You uploaded:", uploaded_file.name)
@@ -24,17 +30,14 @@ if uploaded_file is not None:
     image = image.resize((224, 224))
     # Convert the PIL image to a numpy array
     image_array = np.array(image)
-    st.write(image_array.shape)
+    augmented_images=np.array([augmentor(image=image_array)["image"] for i in range(level)])        
+    out = model.predict(augmented_images)
+    out=np.sum(out,axis=0)/level
+    col1,col2=st.columns(2)
+    with col1:
+        st.image(image, caption="Uploaded Image",width=400)
+    with col2:
+        bar2 = st.progress(0, text=f"Infected : {out[1] * 100:.2f}%")
 
-    # Predict using the model
-    out = model.predict(image_array.reshape(-1, 224, 224, 3))
-
-    st.image(image, caption="Uploaded Image", use_column_width=True)
-    bar1 = st.progress(0, text="Normal")
-    bar2 = st.progress(0, text="Infected")
-
-    for i in range(int(out[0][0] * 100)):
-        bar1.progress(i + 1, text="Normal")
-
-    for i in range(int(out[0][1] * 100)):
-        bar2.progress(i + 1, text="Infected")
+        for i in range(int(out[1] * 100)):
+            bar2.progress(i + 1, text=f"chances of infection : {out[1] * 100:.2f}%")
