@@ -3,10 +3,11 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import pickle
-
+import os
 st.set_page_config(page_icon="hello",layout="wide")
 
 uploaded_file = st.file_uploader("Choose a file", type=["jpg", "jpeg", "png"])
+st.write((os.listdir(".")))
 model = tf.keras.models.load_model("models/binary_model.h5")
 augmentor=pickle.load(open("serialized_files/augmentor.pkl","rb"))
 
