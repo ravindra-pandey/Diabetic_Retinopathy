@@ -12,7 +12,7 @@ uploaded_file = st.file_uploader(
     "Upload the image of retina here....", type=["jpg", "jpeg", "png"]
 )
 
-model = tf.keras.models.load_model("models/binary_model.h5")
+model = tf.keras.models.load_model("./models/binary_model.h5")
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
