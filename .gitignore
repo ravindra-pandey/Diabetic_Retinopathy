@@ -3,7 +3,9 @@
 *.png
 *.zip
 .vscode
+.gitattributes
 dataset
 augmented_dataset
 runtimes
-.gitattributes
+severity_runtimes
+severity_augmented_dataset
