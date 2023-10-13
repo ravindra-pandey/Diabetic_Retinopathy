@@ -37,7 +37,7 @@ with col1:
     else:
         st.header("your image will be shown here")
 with col2:
-    bar2 = st.progress(0, text=f"Chances of infection : 0 %")
+    bar2 = st.progress(0, text=f"Chances of infection :6 0 %")
     if uploaded_file is not None:
         for i in range(int(out[0][1] * 100)):
             bar2.progress(i + 1, text=f"chances of infection : {out[0][1] * 100:.2f}%")
