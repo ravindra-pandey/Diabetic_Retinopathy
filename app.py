@@ -40,8 +40,7 @@ with col1:
     else:
         st.header("your image will be shown here")
 with col2:
-    bar1 = st.progress(0, text=f"Chances of infection :0 %")
-    st.write(f"level: {severity}")
+    bar1 = st.progress(0, text=f"Chances of infection")
     bar2 = st.progress(0, text=encoder.inverse_transform([2])[0])
     bar3 = st.progress(0, text=encoder.inverse_transform([0])[0])
     bar4 = st.progress(0, text=encoder.inverse_transform([1])[0])
