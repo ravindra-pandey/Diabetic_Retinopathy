@@ -12,5 +12,5 @@ url="$1"
 # Extract the file name from the URL
 output_file="archive.zip"
 
-# Download the file using wget
-wget -O "$output_file" "$url"
+# Download the file using curl
+curl -o "$output_file" "$url"
