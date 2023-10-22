@@ -28,13 +28,10 @@ AUTOTUNE = tf.data.AUTOTUNE
 train_dataset=tf.data.Dataset.from_tensor_slices((X_train,y_train)).map(md.load_one_image,num_parallel_calls=AUTOTUNE).cache().batch(batch_size=16).prefetch(AUTOTUNE)
 test_dataset=tf.data.Dataset.from_tensor_slices((X_test,y_test)).map(md.load_one_image,num_parallel_calls=AUTOTUNE).cache().batch(batch_size=16).prefetch(AUTOTUNE)
 
-try:
-    model=tf.keras.models.load_model(f"runtimes/runtime_2023-10-22 06:29:15.819334/checkpoint.h5")
-except:
-    model=md.build_model(2)
-    model.compile(optimizer='adam',
-                loss='sparse_categorical_crossentropy',
-                metrics=['accuracy'])
+model=md.build_model(2)
+model.compile(optimizer='adam',
+            loss='sparse_categorical_crossentropy',
+            metrics=['accuracy'])
 
 cur_time=datetime.datetime.now()
 out_dir=f"runtimes/runtime_{cur_time}"
