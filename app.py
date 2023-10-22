@@ -30,7 +30,6 @@ if uploaded_file is not None:
     image_array = np.array(image)
 
     out = model.predict(np.array([image_array]))
-    severity = severity_model.predict(np.array([image_array]))
 
 col1, col2 = st.columns([0.55, 0.45])
 
@@ -41,35 +40,34 @@ with col1:
         st.header("your image will be shown here")
 with col2:
     bar1 = st.progress(0, text=f"Chances of infection")
-    bar2 = st.progress(0, text=encoder.inverse_transform([2])[0])
-    bar3 = st.progress(0, text=encoder.inverse_transform([0])[0])
-    bar4 = st.progress(0, text=encoder.inverse_transform([1])[0])
-    bar6 = st.progress(0, text=encoder.inverse_transform([4])[0])
-    bar5 = st.progress(0, text=encoder.inverse_transform([3])[0])
 
     if uploaded_file is not None:
         for i in range(int(out[0][1] * 100)):
             bar1.progress(i + 1, text=f"chances of infection : {out[0][1] * 100:.2f}%")
+            
+        if out[0][1]>0.3:
+            severity = severity_model.predict(np.array([image_array]))
+            bar2 = st.progress(0, text=encoder.inverse_transform([0])[0])
+            bar3 = st.progress(0, text=encoder.inverse_transform([1])[0])
+            bar4 = st.progress(0, text=encoder.inverse_transform([3])[0])
+            bar5 = st.progress(0, text=encoder.inverse_transform([2])[0])
+            for i in range(int(severity[0][0] * 100)):
+                bar2.progress(
+                    
+                    i + 1, text=f"{encoder.inverse_transform([0])[0]}: {severity[0][0] * 100:.2f}%"
+                )
 
-        for i in range(int(severity[0][2] * 100)):
-            bar2.progress(
-                i + 1, text=f"{encoder.inverse_transform([2])[0]}: {severity[0][2] * 100:.2f}%"
-            )
+            for i in range(int(severity[0][1] * 100)):
+                bar3.progress(
+                    i + 1, text=f"{encoder.inverse_transform([1])[0]}: {severity[0][1] * 100:.2f}%"
+                )
 
-        for i in range(int(severity[0][0] * 100)):
-            bar3.progress(
-                i + 1, text=f"{encoder.inverse_transform([0])[0]}: {severity[0][0] * 100:.2f}%"
-            )
+            for i in range(int(severity[0][3] * 100)):
+                bar4.progress(
+                    i + 1, text=f"{encoder.inverse_transform([3])[0]}: {severity[0][3] * 100:.2f}%"
+                )
 
-        for i in range(int(severity[0][1] * 100)):
-            bar4.progress(
-                i + 1, text=f"{encoder.inverse_transform([1])[0]}: {severity[0][1] * 100:.2f}%"
-            )
-
-        for i in range(int(severity[0][3] * 100)):
-            bar5.progress(
-                i + 1, text=f"{encoder.inverse_transform([3])[0]}: {severity[0][3] * 100:.2f}%"
-            )
-
-        for i in range(int(severity[0][4] * 100)):
-            bar6.progress(i + 1, text=f"{encoder.inverse_transform([4])[0]}: {severity[0][4] * 100:.2f}%")
+            for i in range(int(severity[0][2] * 100)):
+                bar5.progress(
+                    i + 1, text=f"{encoder.inverse_transform([2])[0]}: {severity[0][2] * 100:.2f}%"
+                )
