@@ -75,4 +75,3 @@ def predict_severity(uploaded_image):
             i + 1,
             text=f"{encoder.inverse_transform([2])[0]}: {severity[0][2] * 100:.2f}%",
             )
-            
