@@ -3,6 +3,7 @@
 *.zip
 .vscode
 .gitattributes
+test.py
 dataset
 augmented_dataset
 runtimes
