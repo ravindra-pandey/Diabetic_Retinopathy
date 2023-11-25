@@ -12,34 +12,38 @@ encoder = pickle.load(open("serialized_files/label_encoder.pkl", "rb"))
 
 
 def preprocess_image(image):
-    width, height = image.size
-    left = int(width * 0.05)
-    right = int(width * 0.95)
-    top = int(height * 0.08)
-    bottom = int(height * 0.92)
+    # width, height = image.size
+    # left = int(width * 0.05)
+    # right = int(width * 0.95)
+    # top = int(height * 0.08)
+    # bottom = int(height * 0.92)
 
-    image = image.crop((left, top, right, bottom))
+    # image = image.crop((left, top, right, bottom))
     image = image.resize((224, 224))
     image = np.array(image)
     return image
 
 
-def predict_dr(uploaded_image):
+def read_image(uploaded_image):
     IMAGE = Image.open(uploaded_image).convert("RGB")
     image = preprocess_image(IMAGE)
-    st.image(image)
+    return IMAGE, image
+
+
+def predict_dr(uploaded_image,show_im=True):
+    IMAGE, image = read_image(uploaded_image)
+    if show_im:
+        st.image(image)
     # temp_img = Image.fromarray(np.pad(IMAGE, 1).astype("uint8"), "RGB")
-    retina_score = retina_detector.predict(
-        np.array([np.array(IMAGE.resize((32, 32)))])
-    )
+    retina_score = retina_detector.predict(np.array([np.array(IMAGE.resize((32, 32)))]))
 
     if retina_score[0][1] > 0.95:
         bar = st.progress(0, text="chance of infection")
         out = model.predict(np.array([image]))
-        if out[0][1]>0.75:
-            text_color="red"
+        if out[0][1] > 0.55:
+            text_color = "red"
         else:
-            text_color="green"
+            text_color = "green"
         for i in range(int(out[0][1] * 100)):
             bar.progress(
                 i + 1,
@@ -47,13 +51,16 @@ def predict_dr(uploaded_image):
             )
         st.divider()
     else:
-        st.error("It is not an retina image *or* \n It has been zoomed IN unnecessarily Please get the better picture for testing ",icon="🚨")
+        st.error(
+            '''It is not an retina image *or* \n It has been zoomed IN unnecessarily Please get the better picture for testing ",
+            icon="🚨,
+        ''')
         out = None
     return out
 
+
 def predict_severity(uploaded_image):
-    image = Image.open(uploaded_image).convert("RGB")
-    image = preprocess_image(image)
+    _, image = read_image(uploaded_image)
 
     severity = severity_model.predict(np.array([image]))
     bar2 = st.progress(0, text=encoder.inverse_transform([0])[0])

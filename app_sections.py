@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import predictions as pr
 
@@ -26,7 +27,7 @@ def prediction_section():
                 if left_eye_image is not None:
                     out = pr.predict_dr(left_eye_image)
                     if out is not None:
-                        if out[0][1] > 0.75:
+                        if out[0][1] > 0.55:
                             pr.predict_severity(left_eye_image)
                         else:
                             st.success("No DR detected")
@@ -35,26 +36,31 @@ def prediction_section():
                 if right_eye_image is not None:
                     out = pr.predict_dr(right_eye_image)
                     if out is not None:
-                        if out[0][1] > 0.75:
+                        if out[0][1] > 0.55:
                             pr.predict_severity(right_eye_image)
                         else:
                             st.success("No DR detected")
 
-def home():
-        st.header('What is Diabetic Retinopathy?')
-        st.write(
-            "Diabetic retinopathy is an eye disease that affects people with diabetes. It damages the blood vessels "
-            "within the retina, the light-sensitive tissue at the back of the eye. It can cause vision problems and "
-            "lead to blindness if left untreated.")
 
-        st.header('Types of Diabetic Retinopathy')
-        st.write(
-            "There are two main types: Non-proliferative diabetic retinopathy (NPDR) and Proliferative diabetic "
-            "retinopathy (PDR). NPDR is the early stage where blood vessels weaken, leak, or become blocked. PDR is "
-            "an advanced stage where new, fragile blood vessels grow in the retina.")
+def sample_prediction(image_path,key):
+    col1, col2 = st.columns(2)
+    image_type=image_path.split("/")[-2]
+    with col1:
+        _, image = pr.read_image(image_path)
+        st.image(image, width=300   )
+    with col2:
+        st.markdown(f'''### This is an {image_type} image Originally. 
+                    To test our model click on the button below. ''')
+        test = st.button("Test DR",key=key)
+        if test == True:
+            out = pr.predict_dr(image_path, show_im=False)
+            if out is not None:
+                if out[0][1] > 0.55:
+                    pr.predict_severity(image_path)
+                else:
+                    st.success("No DR detected")
 
-        st.header('Symptoms and Prevention')
-        st.write(
-            "In the early stages, there might be no noticeable symptoms. As it progresses, symptoms may include blurred "
-            "vision, floaters, impaired color vision, or vision loss. Regular eye check-ups, controlling blood sugar, "
-            "blood pressure, and leading a healthy lifestyle are essential in preventing and managing diabetic retinopathy.")
+def sample():
+    image_names=[f"{root}/{file}" for root,dir,files in os.walk("samples") for file in files]
+    for key,image_name in enumerate(image_names):
+        sample_prediction(image_name,key)
