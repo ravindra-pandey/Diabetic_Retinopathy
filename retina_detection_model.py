@@ -18,6 +18,9 @@ nonretina_dataset = tf.keras.datasets.cifar100
 
 
 def prepare_dataset():
+    """
+    This function is responsible for the prepration of the dataset
+    """
     (x_train, y_train), (x_val, y_val) = nonretina_dataset.load_data()
     nonretina_images = np.append(x_train, x_val, axis=0)
     nonretina_label = np.zeros(nonretina_images.shape[0])
